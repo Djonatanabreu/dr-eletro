@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "nu-biu-tem",
-    "slug": "nu-biu-tem",
+    "name": "Dr Eletro",
+    "slug": "DR-Eletro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#fff"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -20,11 +20,20 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#000"
+      },
+      "package": "com.djonatanabreu.caIntegrativa"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bbc8647c-c0f0-41ff-b976-3451d4ea4d4d"
+      }
     }
   }
 }
