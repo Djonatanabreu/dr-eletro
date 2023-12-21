@@ -85,7 +85,10 @@ const DashboardStackRoutes = () => (
     <Drawer.Screen name="ProductRoutes" component={ProductRoutes} />
     <Drawer.Screen name="AboutUs" component={useLayout(Dashboard.AboutUs)} />
     <Drawer.Screen name="NewsRoutes" component={NewsRoutes} />
-    <Stack.Screen name="MyIdeas" component={useLayout(Dashboard.MyIdeas)} />
+    <Stack.Screen
+      name="TechnicalAssistance"
+      component={useLayout(Dashboard.TechnicalAssistance)}
+    />
     <Stack.Screen name="Orders" component={useLayout(Dashboard.Orders)} />
     <Stack.Screen name="LoginRoutes" component={LoginRoutes} />
   </Drawer.Navigator>

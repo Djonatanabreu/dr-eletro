@@ -12,6 +12,10 @@ export type User = {
   valor?: string;
   categoria_id?: string;
   imagem?: string;
+  cep: string;
+  endereco: string;
+  numero: number;
+  bairro: string;
 };
 
 export type UserChangePassword = {
@@ -33,4 +37,8 @@ export type UserUpdate = {
   valor?: string;
   categoria_id?: string;
   image: string[] | string;
+  cep: string;
+  endereco: string;
+  numero: number;
+  bairro: string;
 };

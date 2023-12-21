@@ -13,6 +13,7 @@ export type colorNames =
   | 'Green'
   | 'Alternative'
   | 'Base'
+  | 'Secondary'
   | 'LightGrey';
 
 export const Colors = {
@@ -29,6 +30,7 @@ export const Colors = {
   FlourescentGreen: '#00AD58',
   Green: '#006E39',
   Red: '#FF4E4E',
-  Base: '#408b97',
-  Alternative: '#0A8B97',
+  Base: '#05015E',
+  Alternative: '#05015E',
+  Secondary: '#FF8203',
 };

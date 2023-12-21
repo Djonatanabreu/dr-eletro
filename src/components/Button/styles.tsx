@@ -4,7 +4,14 @@ import { DefaultTheme } from '../../styles/default';
 
 interface ButtonProps {
   readonly disabled: boolean;
-  readonly color: 'primary' | 'danger' | 'secondary' | 'success' | 'warning';
+  readonly color:
+    | 'primary'
+    | 'danger'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'base'
+    | 'alternative';
   readonly variantType: 'linear' | 'block' | 'outline' | 'inline';
   readonly fullWidth?: boolean;
   small: boolean;
@@ -19,7 +26,9 @@ interface LabelProps {
     | 'danger'
     | 'secondary'
     | 'success'
-    | 'warning';
+    | 'warning'
+    | 'base'
+    | 'alternative';
   readonly variantType: 'linear' | 'block' | 'outline' | 'inline';
   theme: DefaultTheme;
   small: boolean;

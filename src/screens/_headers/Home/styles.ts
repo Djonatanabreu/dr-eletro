@@ -10,5 +10,5 @@ export const Content = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding: 10px 15px;
+  padding: 10px 0px;
 `;

@@ -17,6 +17,7 @@ interface INewButtonProps extends TouchableOpacityProps {
   fontSize?: number;
   buttonWidth?: number | string;
   buttonHeight?: number | string;
+  buttonColor?: colorNames;
 }
 
 export function NewButton({
@@ -26,7 +27,7 @@ export function NewButton({
   fontSize = 20,
   buttonWidth,
   buttonHeight,
-
+  buttonColor = 'Base',
   ...props
 }: INewButtonProps) {
   const { width } = useWindowDimensions();
@@ -35,7 +36,7 @@ export function NewButton({
     <TouchableOpacity
       style={{
         marginLeft: 5,
-        backgroundColor: Colors.Base,
+        backgroundColor: Colors[buttonColor],
         alignItems: 'center',
         justifyContent: 'center',
         width: buttonWidth || width / 2.2,
@@ -52,7 +53,8 @@ export function NewButton({
           width: iconButton ? '60%' : '100%',
           paddingHorizontal: 4,
           textAlign: 'center',
-          marginLeft: 8,
+          marginLeft: iconButton ? 8 : 0,
+          alignSelf: 'center',
         }}
       >
         {buttonText}

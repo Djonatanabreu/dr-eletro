@@ -7,14 +7,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import axios from 'axios';
 
-import { TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { TouchableOpacity, useWindowDimensions } from 'react-native';
 import { Props } from '../../../interfaces/routes.interface';
 import useToast from '../../../libs/useToast';
 import { UserLogin } from '../../../interfaces/auth.interface';
 import { useUserStore } from '../../../store/user';
 import { ResponseError } from '../../../interfaces/utils.interface';
 import { loginSchema } from '../../../validators/auth.schemas';
-import { bannerAuth, email, logoauth, password } from '../../../assets/img';
+import { bannerAuth, email, password } from '../../../assets/img';
 import { Column, ContentScroll, TitleAuth } from '../../../components/commons';
 import Input from '../../../components/Inputs/Input';
 import Button from '../../../components/Button';
@@ -23,12 +23,11 @@ import useAuthStore from 'store/auth';
 import { visibility } from 'components/Modals/LoginModal/store/sliceLoginModalVisibility';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
-import { useNavigation } from '@react-navigation/native';
 
 const Login = ({ route, navigation }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const toast = useToast();
 
@@ -87,7 +86,6 @@ const Login = ({ route, navigation }: Props) => {
   return (
     <Container>
       <BackgroundAuth source={bannerAuth} resizeMode="contain" />
-      {/* <ImageAuth source={logoauth} /> */}
       <ContentScroll style={{ marginTop: width * 0.4 }}>
         <Column style={{ paddingHorizontal: 50, gap: width * 0.085 }}>
           <TitleAuth>Login</TitleAuth>

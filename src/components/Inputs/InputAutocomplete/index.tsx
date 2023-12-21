@@ -7,6 +7,7 @@ import { Dimensions, Platform } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { defaultTheme } from '../../../styles/default';
 import { Text } from 'react-native';
+import { Colors } from 'components/Theme';
 
 interface Options {
   id: string;
@@ -115,9 +116,9 @@ export const InputAutocomplete: React.FunctionComponent<InputProps> = memo(
                   }
                   ChevronIconComponent={
                     <FontAwesome5
-                      name="chevron-down"
+                      name="search"
                       size={25}
-                      color={defaultTheme.secondary}
+                      color={Colors.Secondary}
                     />
                   }
                 />

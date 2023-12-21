@@ -1,6 +1,6 @@
 import { RFValue } from 'react-native-responsive-fontsize';
-const primary = '#0A8B97';
-const secondary = '#408b97';
+const primary = '#05015E';
+const secondary = '#05015E';
 export interface DefaultTheme {
   primary: string;
   secondary: string;
@@ -43,6 +43,14 @@ export interface DefaultTheme {
       background: string;
     };
     warning: {
+      foreground: string;
+      background: string;
+    };
+    base: {
+      foreground: string;
+      background: string;
+    };
+    alternative: {
       foreground: string;
       background: string;
     };
@@ -107,6 +115,14 @@ export const defaultTheme: DefaultTheme = {
     warning: {
       foreground: '#FFFFFF',
       background: '#FDCC01',
+    },
+    base: {
+      foreground: '#FFFFFF',
+      background: '#05015E',
+    },
+    alternative: {
+      foreground: '#FFFFFF',
+      background: '#FF8203',
     },
   },
   fonts: {

@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import { DefaultTheme } from '../../../styles/default';
+import { Colors } from 'components/Theme';
 
 export const Container = styled.View`
   align-self: stretch;
@@ -29,7 +30,7 @@ export const FieldContainer = styled.View<FieldProps>`
   border: ${({ theme, gray }) =>
     gray ? 'none' : ` 1px solid ${theme.border}`};
   background-color: ${({ theme, gray }) =>
-    gray ? '#E4E4E4' : theme.background};
+    gray ? Colors.LightGrey : theme.background};
   align-items: center;
   border-radius: 100px;
   ${({ error }) =>
