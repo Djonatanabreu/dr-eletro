@@ -20,6 +20,7 @@ export interface InputProps {
   multiline?: boolean;
   Icon?: any;
   removeRadius?: boolean;
+  sizeOptions?: 'small' | 'normal' | 'long' | null;
   onSubmitEditing?: () => void;
   keyboardType?:
     | 'default'
@@ -54,6 +55,7 @@ const Input: React.FunctionComponent<InputProps> = ({
   secure = false,
   placeholder = '',
   multiline = false,
+  sizeOptions = null,
   Icon,
   keyboardType = 'default',
   removeRadius = false,
@@ -81,6 +83,7 @@ const Input: React.FunctionComponent<InputProps> = ({
           <Container>
             {label && <Label>{label}</Label>}
             <FieldContainer
+              sizeOptions={sizeOptions}
               multiline={multiline}
               removeRadius={removeRadius}
               gray={gray}

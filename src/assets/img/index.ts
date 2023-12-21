@@ -18,4 +18,5 @@ export const photo = require('./photo.png');
 export const lamp = require('./lamp.png');
 export const placeholder = require('./placeholder.png');
 export const header = require('./header.png');
-// export const logo = require('./logo.png');
+export const watermark = require('./watermark.png');
+export const bottomImage = require('./bottomImage.png');

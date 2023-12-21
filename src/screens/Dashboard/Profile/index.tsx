@@ -7,6 +7,7 @@ import {
   ContainerPage,
   ContentPage,
   ContentScroll,
+  Row,
 } from 'components/commons';
 import BackHeader from 'screens/_headers/Back';
 import { useUserStore } from 'store/user';
@@ -27,6 +28,7 @@ import { RefreshControl } from 'react-native';
 import DeletarContaModal from 'components/Modals/DeletarContaModal';
 import { width } from 'components/Theme/Responsive';
 import useAuthStore from 'store/auth';
+import InputSelect from 'components/Inputs/InputSelect';
 
 type ChangePasswordRef = React.ElementRef<typeof ChangePassword>;
 
@@ -57,7 +59,11 @@ const Profile = ({ route, navigation }: Props) => {
       senha: '',
       // whatsapp: user?.whatsapp,
       // estado: user?.estado_id,
-      // cidade: user?.cidade_id,
+      cep: user?.cep,
+      cidade: user?.cidade_id,
+      endereco: user?.endereco,
+      numero: user?.numero,
+      bairro: user?.bairro,
       // categoria_id: user?.categoria_id,
       // anos_experiencia: user?.anos_experiencia,
       // descricao: user?.descricao,
@@ -277,8 +283,82 @@ const Profile = ({ route, navigation }: Props) => {
               returnKeyType="next"
               error={errors.email}
               blurOnSubmit={false}
+              onSubmitEditing={() => setFocus('cep')}
+            />
+            <Input
+              label="Cep:"
+              control={control}
+              name="cep"
+              gray
+              removeRadius
+              disabled
+              autoCapitalize="none"
+              returnKeyType="next"
+              error={errors.cep}
+              blurOnSubmit={false}
               onSubmitEditing={() => setFocus('whatsapp')}
             />
+            <Row>
+              <Input
+                sizeOptions={'long'}
+                label="Endereço:"
+                control={control}
+                name="endereço"
+                gray
+                removeRadius
+                disabled
+                autoCapitalize="none"
+                returnKeyType="next"
+                error={errors.cep}
+                blurOnSubmit={false}
+                onSubmitEditing={() => setFocus('whatsapp')}
+              />
+              <Input
+                sizeOptions={'small'}
+                label="Número:"
+                control={control}
+                name="numero"
+                gray
+                removeRadius
+                disabled
+                autoCapitalize="none"
+                returnKeyType="next"
+                error={errors.cep}
+                blurOnSubmit={false}
+                onSubmitEditing={() => setFocus('whatsapp')}
+              />
+            </Row>
+            <Row>
+              <Input
+                sizeOptions={'normal'}
+                label="Cidade:"
+                control={control}
+                name="cidade"
+                gray
+                removeRadius
+                disabled
+                autoCapitalize="none"
+                returnKeyType="next"
+                error={errors.cep}
+                blurOnSubmit={false}
+                onSubmitEditing={() => setFocus('whatsapp')}
+              />
+              <Input
+                sizeOptions={'normal'}
+                label="Bairro:"
+                control={control}
+                name="bairro"
+                gray
+                removeRadius
+                disabled
+                autoCapitalize="none"
+                returnKeyType="next"
+                error={errors.cep}
+                blurOnSubmit={false}
+                onSubmitEditing={() => setFocus('whatsapp')}
+              />
+            </Row>
+
             {/* <Input
               label="Whatsapp:"
               control={control}

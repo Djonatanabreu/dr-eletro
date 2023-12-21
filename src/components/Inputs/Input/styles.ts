@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components/native';
 import { DefaultTheme } from '../../../styles/default';
+import { InputProps } from '.';
+import { width } from 'components/Theme/Responsive';
 
 export const Container = styled.View`
   align-self: stretch;
@@ -17,9 +19,19 @@ interface FieldProps {
   gray: boolean;
   multiline?: boolean;
   removeRadius?: boolean;
+  sizeOptions?: InputProps['sizeOptions'];
 }
 export const FieldContainer = styled.View<FieldProps>`
   display: flex;
+  ${({ sizeOptions }) =>
+    sizeOptions &&
+    css`
+      width: ${sizeOptions === 'small'
+        ? '100'
+        : sizeOptions === 'normal'
+        ? width(40)
+        : width(55)};
+    `}
   padding: 0px 5px;
   ${({ multiline }) =>
     multiline &&

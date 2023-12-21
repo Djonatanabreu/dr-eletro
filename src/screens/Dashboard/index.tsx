@@ -6,7 +6,7 @@ import Noticias from './Noticias';
 import NewsDetail from './Noticias/NewsDetail';
 import ProductCategoryList from './Product';
 import ProductList from './Product/ProductList/ProductList';
-import MyIdeas from './MyIdeas/index';
+import TechnicalAssistance from './TechnicalAssistance/index';
 import Orders from './Orders';
 
 export default {
@@ -18,6 +18,6 @@ export default {
   NewsDetail,
   ProductList,
   ProductCategoryList,
-  MyIdeas,
+  TechnicalAssistance,
   Orders,
 };

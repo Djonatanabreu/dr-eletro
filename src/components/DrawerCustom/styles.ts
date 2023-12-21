@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import { DefaultTheme, defaultTheme } from '../../styles/default';
 import { Dimensions } from 'react-native';
+import { Colors } from 'components/Theme';
 const { width, height } = Dimensions.get('screen');
 
 export const Container = styled.View`
@@ -24,6 +25,7 @@ export const HeaderStyle = {
   Footer: styled.View`
     margin-top: auto;
     align-items: center;
+    margin-bottom: 5px;
   `,
   Center: styled.View`
     padding-left: 5px;
@@ -35,7 +37,7 @@ export const HeaderStyle = {
   `,
   Text: styled.Text`
     font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.size[12]};
-    color: #fff;
+    color: ${Colors.Grey};
     font-family: 'Agrandir';
   `,
   Item: styled.TouchableOpacity`
@@ -45,6 +47,6 @@ export const HeaderStyle = {
   Name: styled.Text`
     font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.size[18]};
     font-family: 'Agrandir';
-    color: #fff;
+    color: ${Colors.Grey};
   `,
 };

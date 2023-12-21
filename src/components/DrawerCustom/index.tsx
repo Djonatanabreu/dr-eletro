@@ -15,7 +15,6 @@ import {
   sair,
   about,
   carrinho,
-  compras,
 } from '../../assets/img';
 import { logout } from '../../utils/functions';
 import { useDispatch } from 'react-redux';
@@ -39,21 +38,14 @@ const DrawerCustom = (props: any) => {
       icon: profile,
       nav: () => navigation.navigate('Profile'),
     },
-    {
-      name: 'Minha Agenda',
-      icon: calendar,
-      nav: () =>
-        navigation.navigate('ScheduleRoutes', {
-          screen: 'MySchedule',
-        }),
-    },
-    {
-      name: 'Minhas Ideias',
-      icon: ideia,
-      nav: () => {
-        navigation.navigate('MyIdeas');
-      },
-    },
+    // {
+    //   name: 'Minha Agenda',
+    //   icon: calendar,
+    //   nav: () =>
+    //     navigation.navigate('ScheduleRoutes', {
+    //       screen: 'MySchedule',
+    //     }),
+    // },
     {
       name: 'Produtos',
       icon: carrinho,
@@ -61,6 +53,13 @@ const DrawerCustom = (props: any) => {
         navigation.navigate('ProductRoutes', {
           screen: 'ProductCategoryList',
         }),
+    },
+    {
+      name: 'Assistência Técnica',
+      icon: ideia,
+      nav: () => {
+        navigation.navigate('TechnicalAssistance');
+      },
     },
     // {
     //   name: 'Meus Pedidos',
@@ -94,7 +93,7 @@ const DrawerCustom = (props: any) => {
   return (
     <Container>
       <HeaderStyle.Content>
-        <HeaderStyle.Img source={header} />
+        <HeaderStyle.Img source={header} resizeMode="contain" />
       </HeaderStyle.Content>
       <HeaderStyle.Center>
         {routes.map(el => (
@@ -120,7 +119,7 @@ const DrawerCustom = (props: any) => {
         <TouchableOpacity
           onPress={() =>
             Linking.openURL(
-              'https://www.app.duotecnologia.com/aplicativo/politica-de-privacidade-15/'
+              'https://www.app.duotecnologia.com/aplicativo/politica-de-privacidade-39/'
             )
           }
         >

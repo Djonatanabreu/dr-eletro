@@ -11,6 +11,7 @@ web-build/
 # Yarn
 .yarn/
 
+
 # Native
 *.orig.*
 *.jks
@@ -33,6 +34,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo

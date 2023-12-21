@@ -1,6 +1,7 @@
 import { Container as ContainerDefault } from '../../../components/commons';
 import styled from 'styled-components/native';
 import { DefaultTheme } from '../../../styles/default';
+import { Colors } from 'components/Theme';
 
 export const Container = styled(ContainerDefault)`
   justify-content: center;
@@ -17,7 +18,7 @@ export const BackgroundAuth = styled.Image`
 
 export const ButtonText = styled.Text`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.size[12]};
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.secondary};
+  color: ${Colors.SelectedGrey};
   text-align: center;
 `;
 
