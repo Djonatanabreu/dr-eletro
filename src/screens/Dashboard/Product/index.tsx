@@ -40,14 +40,14 @@ export default function ProductCategoryList({ route, navigation }: any) {
   return (
     <ScrollView
       style={{
-        paddingHorizontal: width(5),
+        paddingHorizontal: width(10),
         paddingVertical: width(5),
         backgroundColor: Colors.White,
       }}
     >
       <View style={{ gap: 15 }}>
-        <BackHeader title="Categorias" />
-        <View style={{ gap: 20, alignItems: 'center' }}>
+        <BackHeader title="Produtos" />
+        <View style={{ gap: 25, alignItems: 'center' }}>
           {productCategoryList.map(category => {
             return (
               <CardContainer

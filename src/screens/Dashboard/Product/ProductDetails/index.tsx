@@ -1,26 +1,34 @@
+import { whatsapp } from 'assets/img';
 import { NewButton } from 'components/Button/NewButton/NewButton';
 import { Spacer } from 'components/Spacer/Spacer';
 import { Text } from 'components/Text/Text';
 import { Colors } from 'components/Theme';
 import { width } from 'components/Theme/Responsive';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, Linking, ScrollView, View } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import BackHeader from 'screens/_headers/Back';
+import OrderConfirmationModal from '../OrderConfirmationModal';
+import { useUserStore } from 'store/user';
 
 export default function ProductDetails({ route, navigation }: any) {
+  const [visible, setVisible] = useState<boolean>(false);
   const productUnit = route?.params!;
-  console.log(productUnit.category);
+
+  const { user } = useUserStore(state => state);
 
   useEffect(() => {
     route;
   }, []);
+
+  console.log(user, route);
 
   return (
     <ScrollView
       style={{
         paddingHorizontal: width(5),
         backgroundColor: Colors.White,
+        marginVertical: width(5),
       }}
     >
       <Spacer amount={2} />
@@ -69,15 +77,33 @@ export default function ProductDetails({ route, navigation }: any) {
           <Spacer amount={2} />
           <NewButton
             onPress={() => {
-              Linking.openURL(productUnit.link_compra);
+              setVisible(true);
             }}
-            fontSize={24}
+            fontSize={18}
             buttonText="Comprar"
             buttonHeight={width(12)}
             buttonWidth={width(35)}
+            iconButton={'left'}
+            icon={whatsapp}
           />
           <Spacer amount={4} />
         </View>
+        <OrderConfirmationModal
+          onCloseModal={() => {
+            navigation.navigate('LoginRoutes', {
+              screen: 'login',
+            });
+            setVisible(false);
+          }}
+          onConfirm={() => {
+            Linking.openURL(
+              `${productUnit.link_compra}&text=Gostaria de adquirir o produto: ${productUnit.titulo}. Para entregar no meu endereço Cep: ${user?.cep}. Bairro: ${user?.bairro}. Rua: ${user?.logradouro}, Numero: ${user?.numero}.`
+            );
+            setVisible(false);
+          }}
+          isVisible={visible}
+          onClose={() => setVisible(false)}
+        />
       </View>
     </ScrollView>
   );

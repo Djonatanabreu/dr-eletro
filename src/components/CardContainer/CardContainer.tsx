@@ -29,7 +29,7 @@ export const CardContainer = ({
         justifyContent: 'center',
         width: width(80),
         backgroundColor: Colors.Black,
-        height: width(45),
+        height: width(40),
         borderRadius: width(7),
       }}
     >

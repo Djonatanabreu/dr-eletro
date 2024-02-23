@@ -15,6 +15,9 @@ import {
   sair,
   about,
   carrinho,
+  settings,
+  megaphone,
+  compras,
 } from '../../assets/img';
 import { logout } from '../../utils/functions';
 import { useDispatch } from 'react-redux';
@@ -46,6 +49,14 @@ const DrawerCustom = (props: any) => {
     //       screen: 'MySchedule',
     //     }),
     // },
+
+    {
+      name: 'Assistência Técnica',
+      icon: settings,
+      nav: () => {
+        navigation.navigate('TechnicalAssistance');
+      },
+    },
     {
       name: 'Produtos',
       icon: carrinho,
@@ -55,20 +66,13 @@ const DrawerCustom = (props: any) => {
         }),
     },
     {
-      name: 'Assistência Técnica',
-      icon: ideia,
-      nav: () => {
-        navigation.navigate('TechnicalAssistance');
-      },
+      name: 'Minhas Compras',
+      icon: compras,
+      nav: () => navigation.navigate('Orders'),
     },
-    // {
-    //   name: 'Meus Pedidos',
-    //   icon: compras,
-    //   nav: () => navigation.navigate('Orders'),
-    // },
     {
       name: 'Notícias',
-      icon: noticias,
+      icon: megaphone,
       nav: () =>
         navigation.navigate('NewsRoutes', {
           screen: 'Noticias',
@@ -119,7 +123,7 @@ const DrawerCustom = (props: any) => {
         <TouchableOpacity
           onPress={() =>
             Linking.openURL(
-              'https://www.app.duotecnologia.com/aplicativo/politica-de-privacidade-39/'
+              'https://www.app.duotecnologia.com/aplicativo/politica-de-privacidade-37/'
             )
           }
         >

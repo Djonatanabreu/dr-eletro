@@ -29,7 +29,8 @@ export const HeaderStyle = {
   `,
   Center: styled.View`
     padding-left: 5px;
-    gap: ${Math.floor(height * 0.025)}px;
+    gap: ${Math.floor(height * 0.024)}px;
+    margin-bottom: 10px;
   `,
   Img: styled.Image`
     height: 255px;

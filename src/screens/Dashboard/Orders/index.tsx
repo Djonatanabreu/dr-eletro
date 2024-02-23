@@ -1,13 +1,16 @@
+import Button from 'components/Button';
 import { OrderCardContainer } from 'components/CardContainer/OrderCardContainer';
 import { Spacer } from 'components/Spacer/Spacer';
 import { Text } from 'components/Text/Text';
 import { Colors } from 'components/Theme';
 import { width } from 'components/Theme/Responsive';
+import { Title } from 'components/commons';
 import { useEffect, useState } from 'react';
 import { ImageSourcePropType, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import BackHeader from 'screens/_headers/Back';
 import api from 'services/api';
+import useAuthStore from 'store/auth';
 import { useCompanyStore } from 'store/company';
 import { useUserStore } from 'store/user';
 
@@ -26,10 +29,11 @@ interface IClientOrderListProps {
   imagem: ImageSourcePropType;
 }
 
-export default function Orders() {
+export default function Orders({ navigation }) {
   const [orderData, setOrderData] = useState<IClientOrderListProps[]>([]);
   const [clientOrderList, setClientOrderList] = useState([]);
   const { company_id } = useCompanyStore(state => state);
+  const setSigned = useAuthStore(state => state.setSigned);
   const { user } = useUserStore();
 
   const fetchOrdersList = async () => {
@@ -75,13 +79,37 @@ export default function Orders() {
     <ScrollView
       style={{ paddingHorizontal: width(5), backgroundColor: Colors.White }}
     >
-      <BackHeader title="Meus Pedidos" />
-      <Spacer amount={5} />
-      <View style={{ alignItems: 'center', gap: width(5) }}>
-        <View>
-          <OrderCardContainer productOrdersItems={orderData} />
+      <BackHeader title="Minhas Compras" />
+      {!user ? (
+        <View
+          style={{ width: '80%', alignSelf: 'center', gap: 20, marginTop: 150 }}
+        >
+          <Title>
+            Olá, se deseja usar o app completo, finalize o seu cadastro ou entre
+            com uma conta!
+          </Title>
+          <Button
+            onPress={() => {
+              setSigned(true);
+              navigation.navigate('LoginRoutes', {
+                screen: 'login',
+              });
+            }}
+            label="Login"
+            color="primary"
+            variantType="block"
+          />
         </View>
-      </View>
+      ) : (
+        <>
+          <Spacer amount={5} />
+          <View style={{ alignItems: 'center', gap: width(5) }}>
+            <View>
+              <OrderCardContainer productOrdersItems={orderData} />
+            </View>
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 }

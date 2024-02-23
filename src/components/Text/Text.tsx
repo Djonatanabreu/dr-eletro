@@ -1,7 +1,7 @@
-import { Text as RNText, StyleProp, TextStyle } from 'react-native';
+import { Text as RNText, StyleProp, TextProps, TextStyle } from 'react-native';
 import { colorNames, Colors } from '../Theme/Colors';
 
-interface TextProps {
+interface ITextProps extends TextProps {
   children: React.ReactNode;
   color?: colorNames;
   size?: number;
@@ -13,6 +13,7 @@ interface TextProps {
   fontWeight?: TextStyle['fontWeight'];
   letterSpacing?: TextStyle['letterSpacing'];
   fontFamily?: TextStyle['fontFamily'];
+  textAlign?: TextStyle['textAlign'];
 }
 
 export const Text = ({
@@ -27,8 +28,9 @@ export const Text = ({
   textTransform,
   letterSpacing,
   fontFamily,
-  ...rest
-}: TextProps) => (
+  textAlign,
+  ...props
+}: ITextProps) => (
   <RNText
     onPress={onPress}
     style={{
@@ -40,8 +42,9 @@ export const Text = ({
       textTransform: textTransform,
       letterSpacing: letterSpacing,
       fontFamily: fontFamily,
+      textAlign: textAlign,
     }}
-    {...rest}
+    {...props}
   >
     {children}
   </RNText>

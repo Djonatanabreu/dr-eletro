@@ -81,7 +81,7 @@ const Noticias = ({ route, navigation }: any) => {
         <PageStyle.NewsImage
           style={{ width: width * 0.8, height: height * 0.22 }}
           source={{
-            uri: `https://duotecnologia.com/app/images/noticias/${highlightNewsList[0].imagem}`,
+            uri: `https://www.app.duotecnologia.com/images/noticias/${highlightNewsList[0].imagem}`,
           }}
         />
         <PageStyle.SeeMore>VEJA MAIS...</PageStyle.SeeMore>
@@ -99,13 +99,13 @@ const Noticias = ({ route, navigation }: any) => {
               <FlatList
                 data={newsList}
                 keyExtractor={item => item.id.toString()}
-                ListHeaderComponent={renderHeader}
+                // ListHeaderComponent={renderHeader}
                 renderItem={({ item }) => (
                   <NewsItem
                     onPress={() => onHandleNews(item.id)}
                     titulo={item.titulo}
                     imagem={
-                      `https://duotecnologia.com/app/images/noticias/${item.imagem}` as ImageSourcePropType
+                      `https://www.app.duotecnologia.com/images/noticias/${item.imagem}` as ImageSourcePropType
                     }
                   />
                 )}

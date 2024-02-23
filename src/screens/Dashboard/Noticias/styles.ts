@@ -4,6 +4,7 @@ import { DefaultTheme } from 'styles/default';
 
 export const PageStyle = {
   Content: styled.View`
+    width: 100%;
     gap: 10px;
     margin-bottom: 50px;
   `,

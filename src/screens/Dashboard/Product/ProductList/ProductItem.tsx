@@ -6,6 +6,8 @@ import { width } from 'components/Theme/Responsive';
 import { Text } from 'components/Text/Text';
 import { View } from 'react-native';
 import { Colors } from 'components/Theme';
+import { Spacer } from 'components/Spacer/Spacer';
+import { whatsapp } from 'assets/img';
 
 const ProductItem = ({
   titulo,
@@ -16,36 +18,39 @@ const ProductItem = ({
   return (
     <PageStyle.Content>
       <PageStyle.ProductItemContainer>
-        <View
-          style={{
-            borderStyle: 'solid',
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: Colors.Grey,
-          }}
-        >
-          <PageStyle.ProductImage
-            resizeMode="contain"
-            source={{
-              uri: imagem as string,
-            }}
-          />
-        </View>
         <PageStyle.ProductContent>
-          <PageStyle.ProductTitle ellipsizeMode="tail">
+          <View
+            style={{
+              borderStyle: 'solid',
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: Colors.Grey,
+              alignSelf: 'center',
+            }}
+          >
+            <PageStyle.ProductImage
+              resizeMode="contain"
+              source={{
+                uri: imagem as string,
+              }}
+            />
+          </View>
+          <Spacer amount={0.5} />
+          <PageStyle.ProductTitle numberOfLines={2} ellipsizeMode="tail">
             {titulo}
           </PageStyle.ProductTitle>
 
-          <PageStyle.ProductSummary>
+          {/* <PageStyle.ProductSummary>
             Descrição: {description}
-          </PageStyle.ProductSummary>
+          </PageStyle.ProductSummary> */}
           <PageStyle.SeeMore>
+            <Spacer amount={0.5} />
             <NewButton
-              buttonText="Mais Informações"
-              buttonHeight={width(8)}
-              buttonWidth={width(40)}
+              buttonText="Comprar"
+              buttonHeight={width(6)}
+              buttonWidth={width(20)}
               onPress={onPress}
-              fontSize={width(4)}
+              fontSize={width(3)}
             />
           </PageStyle.SeeMore>
         </PageStyle.ProductContent>

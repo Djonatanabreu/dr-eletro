@@ -30,7 +30,7 @@ export const FieldContainer = styled.View<FieldProps>`
         ? '100'
         : sizeOptions === 'normal'
         ? width(40)
-        : width(55)};
+        : width(55)}px;
     `}
   padding: 0px 5px;
   ${({ multiline }) =>

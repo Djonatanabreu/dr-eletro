@@ -49,11 +49,11 @@ interface ICityProps {
 
 const Profile = ({ route, navigation }: Props) => {
   const [userUpdates, setUserUpdates] = useState();
-  const { user } = useUserStore();
+  const { user, address } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [states, setStates] = useState<IStatesProps[]>([]);
   const [cities, setCities] = useState<ICityProps[]>([]);
-  const [address, setAddress] = useState();
+  const [city, setCity] = useState<ICityProps[]>([]);
 
   const company_id = useCompanyStore(state => state.company_id);
   const setSigned = useAuthStore(state => state.setSigned);
@@ -63,58 +63,28 @@ const Profile = ({ route, navigation }: Props) => {
 
   const toast = useToast();
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setFocus,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm<any>({
-    defaultValues: {
-      nome: user?.nome,
-      email: user?.email,
-      senha: '',
-      cep: user?.cep,
-      estado_id: user?.estado_id,
-      cidade_id: user?.cidade_id,
-      cidade: user?.cidade,
-      logradouro: user?.logradouro,
-      numero: user?.numero,
-      bairro: user?.bairro,
-    },
-    resolver: yupResolver(updateClienteSchema),
-  });
-  const handleCEPChange = async (newCEP: string | undefined) => {
+  const handleGetUser = async () => {
     try {
-      if (!newCEP || newCEP.length <= 7) return;
-
-      const { data: newAddress } = await api.get(
-        `https://viacep.com.br/ws/${newCEP}/json/`
-      );
-
-      const filterAddressByUf = states.filter(state => {
-        const uf = Object.values(newAddress).find((value: any) => {
-          if (value.toLocaleLowerCase() === state.sigla.toLocaleLowerCase())
-            return state.sigla;
-        });
-        return uf;
+      const { data: response } = await api.get('/buscar_dados.php', {
+        params: {
+          id: user?.id,
+        },
       });
 
-      setValue('cidade', newAddress?.localidade);
-      setValue('estado_id', filterAddressByUf[0]?.id);
-      setValue('logradouro', newAddress.logradouro);
-      setValue('bairro', newAddress.bairro);
+      useUserStore.getState().setUser({
+        ...response,
+        nome: response?.nome,
+        email: response?.email,
+        cep: response?.cep,
+        estado_id: response?.estado_id,
+        cidade_id: response?.cidade_id,
+        cidade: handleGetCity(response?.cidade_id),
+        logradouro: response?.logradouro,
+        numero: response?.numero,
+        bairro: response?.bairro,
+      });
     } catch (error) {
-      console.error('Erro ao obter dados do CEP:', error);
-    }
-  };
-
-  const getNewCep = () => {
-    const cep = watch('cep');
-    if (cep >= 8) {
-      return cep;
+      console.log(error);
     }
   };
 
@@ -158,40 +128,11 @@ const Profile = ({ route, navigation }: Props) => {
       });
 
       setValue('cidade', response.cidade);
-      return response.cidade;
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const handleGetUser = async () => {
-  //   try {
-  //     const { data: response } = await api.get('/buscar_dados.php', {
-  //       params: {
-  //         id: user?.id,
-  //       },
-  //     });
-
-  //     handleGetStates();
-
-  //     useUserStore.getState().setUser({
-  //       ...response,
-  //       nome: response?.nome,
-  //       email: response?.email,
-  //       cep: response?.cep,
-  //       estado_id: response?.estado_id,
-  //       cidade_id: response?.cidade_id,
-  //       cidade: handleGetCity(response.cidade_id),
-  //       logradouro: response?.logradouro,
-  //       numero: response?.numero,
-  //       bairro: response?.bairro,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const cidade = watch('cidade');
   const handleSubmitUpdate = async (formData: any) => {
     try {
       setLoading(true);
@@ -202,21 +143,10 @@ const Profile = ({ route, navigation }: Props) => {
 
       delete formData.cidade;
 
-      const filteredCityByName = cities.filter(city => {
-        if (city.nome === cidade) {
-          return city;
-        }
-      });
-
-      setValue('cidade_id', filteredCityByName[0]?.id);
-      setValue('cidade', filteredCityByName[0]?.nome);
-
       let form_data: any = new FormData();
 
       form_data.append('usuario_id', company_id);
       form_data.append('id', user?.id);
-      form_data.append('cidade_id', filteredCityByName[0].id);
-      form_data.append('estado_id', estado);
       for (let key in formData) {
         form_data.append(key, formData[key]);
       }
@@ -227,9 +157,10 @@ const Profile = ({ route, navigation }: Props) => {
         },
       });
 
-      console.log(form_data, response.data);
+      console.log(form_data);
 
       useUserStore.getState().setUser({ ...response.data, type: user?.type });
+      handleGetUser();
 
       toast.successToast('Usuario editado com sucesso !');
     } catch (error) {
@@ -245,23 +176,106 @@ const Profile = ({ route, navigation }: Props) => {
     }
   };
 
-  useEffect(() => {
-    handleGetStates();
-  }, []);
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setFocus,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<any>({
+    defaultValues: {
+      nome: user?.nome,
+      email: user?.email,
+      senha: '',
+      cep: user?.cep,
+      estado_id: user?.estado_id,
+      cidade: user?.cidade,
+      cidade_id: user?.cidade_id,
+      logradouro: user?.logradouro,
+      numero: user?.numero,
+      bairro: user?.bairro,
+    },
+    resolver: yupResolver(updateClienteSchema),
+  });
+
+  const getNewCep = () => {
+    const cep = watch('cep');
+    if (cep >= 8) {
+      return cep;
+    }
+  };
+
+  // const searchCity = (cidade: string) => {
+  //   const filteredCityByName = cities.filter(city => {
+  //     if (city.nome === cidade.toLocaleLowerCase()) {
+  //       return city;
+  //     }
+  //   });
+  //   setValue('cidade', filteredCityByName[0]?.nome);
+  //   setValue('cidade_id', filteredCityByName[0]?.id);
+  // };
+
+  const handleCEPChange = async (newCEP: string | undefined) => {
+    try {
+      if (!newCEP || newCEP.length <= 7) return;
+
+      const { data: newAddress } = await api.get(
+        `https://viacep.com.br/ws/${newCEP}/json/`
+      );
+
+      const filterAddressByUf = states.filter(state => {
+        const uf = Object.values(newAddress).find((value: any) => {
+          if (value.toLocaleLowerCase() === state.sigla.toLocaleLowerCase())
+            return state.sigla;
+        });
+        return uf;
+      });
+
+      handleGetCities(filterAddressByUf[0].id);
+
+      console.log(cities);
+
+      const filteredCityByName = cities.filter(city => {
+        const filteredCity = Object.values(newAddress).find(value => {
+          if (city.nome === value) {
+            return city;
+          }
+        });
+        return filteredCity;
+      });
+
+      console.log(filteredCityByName);
+
+      setValue('cidade_id', filteredCityByName[0]?.id);
+      setValue('cidade', filteredCityByName[0]?.nome);
+      setValue('estado_id', filterAddressByUf[0]?.id);
+      setValue('logradouro', newAddress.logradouro);
+      setValue('bairro', newAddress.bairro);
+    } catch (error) {
+      console.error('Erro ao obter dados do CEP:', error);
+    }
+  };
 
   const estado = watch('estado_id');
   const cep = watch('cep');
 
   useEffect(() => {
-    if (estado) {
-      handleGetCities(estado);
-      setValue('estado_id', estado);
-    }
-  }, [estado]);
+    handleGetUser();
+    handleGetStates();
+    handleGetCity(user?.cidade_id);
+  }, []);
 
   useEffect(() => {
     handleCEPChange(getNewCep());
   }, [cep]);
+
+  useEffect(() => {
+    if (estado) {
+      handleGetCities(estado);
+    }
+  }, []);
 
   return (
     <ContainerPage style={{ paddingHorizontal: 25 }}>

@@ -1,5 +1,5 @@
 import { width } from 'components/Theme/Responsive';
-import { ImageSourcePropType, ScrollView, View } from 'react-native';
+import { FlatList, ImageSourcePropType, ScrollView, View } from 'react-native';
 import BackHeader from 'screens/_headers/Back';
 import ProductItem from './ProductItem';
 import api from 'services/api';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { ProductListType } from './types';
 import LoadingComponent from 'components/Loading';
 import { Colors } from 'components/Theme';
+import { Text } from 'components/Text/Text';
 
 interface IProductCategory {
   productCategoryName: string;
@@ -43,6 +44,8 @@ export default function ProductList({ route, navigation }: any) {
         }
       );
       setProductList(filteredProductList);
+      console.log(productList);
+
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -63,17 +66,19 @@ export default function ProductList({ route, navigation }: any) {
   }, []);
 
   return (
-    <ScrollView
+    <View
       style={{
-        paddingHorizontal: width(5),
         paddingVertical: width(5),
+        paddingHorizontal: width(8),
         backgroundColor: Colors.White,
       }}
     >
-      {!isLoading ? (
+      {isLoading ? (
+        <LoadingComponent isVisible={isLoading} />
+      ) : (
         <>
           <BackHeader title={productCategoryName} />
-          <View style={{ marginBottom: width(10) }}>
+          {/* <View style={{ marginBottom: width(10) }}>
             {productList.map(product => {
               return (
                 <ProductItem
@@ -92,11 +97,44 @@ export default function ProductList({ route, navigation }: any) {
                 />
               );
             })}
-          </View>
+          </View> */}
+          <FlatList
+            data={productList}
+            numColumns={3} // Display 3 products per row
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={{
+              paddingVertical: width(5),
+            }}
+            renderItem={({ item }) => (
+              <ProductItem
+                key={item.id}
+                onPress={() =>
+                  navigation.navigate('ProductDetails', {
+                    ...item,
+                    category: productCategory.productCategoryName,
+                  })
+                }
+                description={item.resumo}
+                titulo={item.titulo}
+                imagem={
+                  `https://www.app.duotecnologia.com/images/produtos/${item.imagem}` as ImageSourcePropType
+                }
+              />
+            )}
+          />
         </>
-      ) : (
-        <LoadingComponent isVisible={isLoading} />
       )}
-    </ScrollView>
+      {productList.length === 0 && !isLoading && (
+        <View
+          style={{
+            height: '80%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text color="Secondary">Nenhum Produto Encontrado...</Text>
+        </View>
+      )}
+    </View>
   );
 }

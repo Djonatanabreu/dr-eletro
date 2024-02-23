@@ -1,5 +1,5 @@
 import Home from './Home';
-import Profile from './Profile';
+import Profile from './Profile/index';
 import MySchedule from './MySchedule';
 import AboutUs from './AboutUs';
 import Noticias from './Noticias';

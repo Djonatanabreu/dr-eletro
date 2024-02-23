@@ -27,7 +27,7 @@ import { AppDispatch } from 'store';
 
 const Register = ({ route, navigation }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
-
+  const setSigned = useAuthStore(state => state.setSigned);
   const { company_id } = useCompanyStore(state => state);
 
   const toast = useToast();
@@ -61,9 +61,10 @@ const Register = ({ route, navigation }: Props) => {
 
       useUserStore.getState().setUser({ ...response.data });
       useAuthStore.getState().setToken('token');
+      setSigned(true);
+      navigation.navigate('Home');
 
       toast.successToast('Registro realizado com sucesso !');
-      navigation.navigate('Home');
     } catch (error) {
       console.log(error);
       const typedError = error as ResponseError;

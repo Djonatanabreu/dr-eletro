@@ -1,20 +1,25 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from 'interfaces/user.interface';
-import { ICategoryProps } from 'screens/Dashboard/BuscarProfissionais';
-import { Cidade } from 'screens/Dashboard/Cidades';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+export interface IAddressProps {
+  zipCode: string;
+  number: number;
+  city: string;
+  street: string;
+  state: string;
+  neighborhood: string;
+}
+
 type State = {
   user?: User;
-  cidade?: Cidade;
-  category?: ICategoryProps;
+  address?: IAddressProps;
 };
 
 type Actions = {
   setUser: (user?: User) => void;
-  setCidade: (cidade?: Cidade) => void;
-  setCategories: (categoria?: ICategoryProps) => void;
+  setAddress: (address?: IAddressProps) => void;
   logout: () => void;
 };
 
@@ -22,31 +27,23 @@ export const useUserStore = create(
   persist<State & Actions>(
     set => ({
       user: undefined,
-      cidade: undefined,
-      category: undefined,
+      address: undefined,
       setUser: user => {
         return set(state => ({
           ...state,
           user,
         }));
       },
-      setCidade: cidade => {
+      setAddress: address => {
         return set(state => ({
           ...state,
-          cidade,
-        }));
-      },
-      setCategories: category => {
-        return set(state => ({
-          ...state,
-          category,
+          address,
         }));
       },
       logout: () => {
         return set(() => ({
           user: undefined,
-          cidade: undefined,
-          setCategories: undefined,
+          address: undefined,
         }));
       },
     }),

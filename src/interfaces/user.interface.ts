@@ -4,7 +4,7 @@ export type User = {
   senha?: string;
   nome: string;
   type?: string;
-  whatsapp: string;
+  whatsapp?: string;
   estado_id?: string;
   cidade_id?: string;
   anos_experiencia?: string;
@@ -13,9 +13,10 @@ export type User = {
   categoria_id?: string;
   imagem?: string;
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: number;
   bairro: string;
+  cidade: string;
 };
 
 export type UserChangePassword = {

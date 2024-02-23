@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import axios from 'axios';
 
-import { TouchableOpacity, useWindowDimensions } from 'react-native';
+import { TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { Props } from '../../../interfaces/routes.interface';
 import useToast from '../../../libs/useToast';
 import { UserLogin } from '../../../interfaces/auth.interface';
@@ -23,9 +23,11 @@ import useAuthStore from 'store/auth';
 import { visibility } from 'components/Modals/LoginModal/store/sliceLoginModalVisibility';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'store';
+import { Spacer } from 'components/Spacer/Spacer';
 
 const Login = ({ route, navigation }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const setSigned = useAuthStore(state => state.setSigned);
 
   const { width } = useWindowDimensions();
 
@@ -47,7 +49,7 @@ const Login = ({ route, navigation }: Props) => {
       useUserStore.getState().setUser(response.data);
       useAuthStore.getState().setToken(response.token);
 
-      navigation.navigate('Home');
+      // navigation.navigate('Home');
 
       toast.successToast('Login realizado com sucesso !');
     } catch (error) {
@@ -87,51 +89,76 @@ const Login = ({ route, navigation }: Props) => {
     <Container>
       <BackgroundAuth source={bannerAuth} resizeMode="contain" />
       <ContentScroll style={{ marginTop: width * 0.4 }}>
-        <Column style={{ paddingHorizontal: 50, gap: width * 0.085 }}>
+        <Column style={{ width: width * 0.8 }}>
           <TitleAuth>Login</TitleAuth>
-          <Input
-            control={control}
-            name="email"
-            autoCapitalize="none"
-            placeholder="Email"
-            Icon={email}
-            keyboardType="email-address"
-            returnKeyType="next"
-            error={errors.email}
-            blurOnSubmit={false}
-            onSubmitEditing={() => setFocus('senha')}
-          />
-          <Input
-            control={control}
-            secure
-            Icon={password}
-            placeholder="Senha"
-            name="senha"
-            autoCapitalize="none"
-            returnKeyType="done"
-            error={errors.senha}
-          />
+          <Spacer amount={4} />
+          <View
+            style={{
+              gap: width * 0.05,
+              minHeight: 140,
+            }}
+          >
+            <Input
+              control={control}
+              name="email"
+              autoCapitalize="none"
+              placeholder="Email"
+              Icon={email}
+              keyboardType="email-address"
+              returnKeyType="next"
+              error={errors.email}
+              blurOnSubmit={false}
+              onSubmitEditing={() => setFocus('senha')}
+            />
+            <Input
+              control={control}
+              secure
+              Icon={password}
+              placeholder="Senha"
+              name="senha"
+              autoCapitalize="none"
+              returnKeyType="done"
+              error={errors.senha}
+            />
+          </View>
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgotPassword')}
           >
-            <ButtonText>Esqueci minha senha</ButtonText>
+            <ButtonText style={{ fontSize: 16 }}>
+              Esqueci minha senha
+            </ButtonText>
           </TouchableOpacity>
-          <Button
-            onPress={handleSubmit(handleSubmitLogin)}
-            label="Logar"
-            loading={loading}
-            fullWidth
-            color="secondaryDark"
-            variantType="block"
-          />
+          <Spacer amount={1} />
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <ButtonText style={{ fontSize: 18 }}>
+            <ButtonText style={{ fontSize: 16 }}>
               Não possui conta? Cadastre-se agora!
             </ButtonText>
           </TouchableOpacity>
-          <ButtonText style={{ fontSize: 16 }}>
-            Faça login para acessar todos os recursos do aplicativo
-          </ButtonText>
+          <Spacer amount={4} />
+          <View>
+            <Button
+              onPress={handleSubmit(handleSubmitLogin)}
+              label="Entrar"
+              loading={loading}
+              fullWidth
+              color="secondaryDark"
+              variantType="block"
+            />
+          </View>
+          <Spacer amount={4} />
+
+          <TouchableOpacity
+            onPress={() => {
+              setSigned(true);
+              useUserStore.getState().setUser(null);
+              // navigation.navigate('Home');
+            }}
+          >
+            <ButtonText style={{ fontSize: 16 }}>
+              Entrar sem cadastro
+            </ButtonText>
+          </TouchableOpacity>
+          <Spacer amount={1} />
         </Column>
       </ContentScroll>
     </Container>

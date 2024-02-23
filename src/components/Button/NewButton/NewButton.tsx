@@ -13,7 +13,7 @@ import { Colors, colorNames } from './../../Theme/Colors';
 interface INewButtonProps extends TouchableOpacityProps {
   icon?: ImageSourcePropType;
   buttonText: string;
-  iconButton?: boolean;
+  iconButton?: boolean | 'left' | 'right';
   fontSize?: number;
   buttonWidth?: number | string;
   buttonHeight?: number | string;
@@ -46,20 +46,40 @@ export function NewButton({
       }}
       {...props}
     >
+      {iconButton === 'left' && (
+        <View
+          style={{
+            width: '20%',
+            height: '85%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginLeft: 3,
+          }}
+        >
+          <Image
+            resizeMode="cover"
+            source={icon}
+            style={{
+              width: width * 0.06,
+              height: width * 0.06,
+              marginRight: 6,
+            }}
+          />
+        </View>
+      )}
       <Text
         style={{
           color: '#fff',
           fontSize: fontSize,
           width: iconButton ? '60%' : '100%',
-          paddingHorizontal: 4,
           textAlign: 'center',
-          marginLeft: iconButton ? 8 : 0,
+          marginRight: iconButton ? 3 : 0,
           alignSelf: 'center',
         }}
       >
         {buttonText}
       </Text>
-      {iconButton && (
+      {iconButton === 'right' && (
         <View
           style={{
             width: '20%',
@@ -69,7 +89,11 @@ export function NewButton({
             marginLeft: 4,
           }}
         >
-          <Image source={icon} style={{ width: 30, height: 30 }} />
+          <Image
+            resizeMode="cover"
+            source={icon}
+            style={{ width: width * 0.06, height: width * 0.06 }}
+          />
         </View>
       )}
     </TouchableOpacity>
