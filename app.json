@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Dr Eletro",
-    "slug": "DR-Eletro",
+    "slug": "dr-eletro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,18 +22,22 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000"
       },
-      "package": "com.djonatanabreu.caIntegrativa"
+      "package": "com.djonatanabreu.dreletro"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "extra": {
+      "eas": {
+        "projectId": "0b1165dc-05c0-4cae-9324-b4ff66f00d8f"
+      }
+    },
     "runtimeVersion": {
       "policy": "appVersion"
     },
-    "extra": {
-      "eas": {
-        "projectId": "bbc8647c-c0f0-41ff-b976-3451d4ea4d4d"
-      }
+    "updates": {
+      "url": "https://u.expo.dev/0b1165dc-05c0-4cae-9324-b4ff66f00d8f"
     }
   }
 }
+

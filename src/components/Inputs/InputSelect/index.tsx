@@ -26,6 +26,7 @@ export interface InputSelectProps {
   items: Options[];
   placeholder?: string;
   disabled?: boolean;
+  sizeOptions?: 'small' | 'normal' | 'long' | null;
 }
 
 const InputSelect: React.FunctionComponent<InputSelectProps> = ({
@@ -37,6 +38,7 @@ const InputSelect: React.FunctionComponent<InputSelectProps> = ({
   disabled,
   removeRadius,
   items = [],
+  sizeOptions,
   Icon,
   placeholder = '',
 }) => {
@@ -60,6 +62,7 @@ const InputSelect: React.FunctionComponent<InputSelectProps> = ({
           <Container>
             {label && <Label>{label}</Label>}
             <FieldContainer
+              sizeOptions={sizeOptions}
               removeRadius={removeRadius}
               gray={gray}
               error={!!error}

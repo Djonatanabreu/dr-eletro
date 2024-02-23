@@ -10,7 +10,6 @@ import { bottomImage } from '../../../assets/img';
 
 import useAuthStore from 'store/auth';
 
-import ModalScreen from 'components/Modals/LoginModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, AppStore } from 'store';
 import { visibility } from '../../../components/Modals/LoginModal/store/sliceLoginModalVisibility';
@@ -20,10 +19,14 @@ import { useForm } from 'react-hook-form';
 import { NewButton } from 'components/Button/NewButton/NewButton';
 import { Spacer } from 'components/Spacer/Spacer';
 import { HeilightItems } from './HeighlightItems';
+import { SearchInput } from './SearchInput';
+import api from 'services/api';
+import { useCompanyStore } from 'store/company';
 
 const Home = ({ route, navigation }: Props) => {
   const [isClosed, setIsClosed] = useState<boolean>(false);
   const { user } = useUserStore(state => state);
+  const [productList, setProductList] = useState([]);
 
   const signed = useAuthStore(state => state.signed);
 
@@ -32,6 +35,8 @@ const Home = ({ route, navigation }: Props) => {
   const visibilitySelector = useSelector(
     (state: AppStore) => state.loginModalVisibility
   );
+
+  const { company_id } = useCompanyStore(state => state);
 
   const {
     control,
@@ -45,14 +50,91 @@ const Home = ({ route, navigation }: Props) => {
     },
   });
 
+  const search = watch('search');
+
+  const fetchProductList = async () => {
+    // setIsLoading(true);
+    try {
+      const { data: response } = await api.get('/lista_produtos.php', {
+        params: {
+          usuario_id: company_id,
+        },
+      });
+      const filteredProductList = response.data.includes(product => {});
+      setProductList(response.data);
+
+      // setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const { width } = useWindowDimensions();
 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    fetchProductList();
     if (!signed && !visibilitySelector.condition) {
       dispatch(visibility({ isVisible: true }));
     }
+  }, []);
+
+  useEffect(() => {
+    if (search) {
+      const newValue = productList.find((prod: any) => prod.id === search);
+      navigation.navigate('ProductRoutes', {
+        screen: 'ProductDetails',
+        params: newValue,
+      });
+    }
+  }, [search]);
+
+  const handleGetCity = async cidadeId => {
+    try {
+      const { data: response } = await api.get('/buscaCidade.php', {
+        params: {
+          usuario_id: company_id,
+          estado_id: user?.estado_id,
+          cidade_id: cidadeId,
+        },
+      });
+
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetUser = async () => {
+    try {
+      const { data: response } = await api.get('/buscar_dados.php', {
+        params: {
+          id: user?.id,
+        },
+      });
+
+      const { cidade } = await handleGetCity(response?.cidade_id);
+
+      useUserStore.getState().setUser({
+        ...response,
+        nome: response?.nome,
+        email: response?.email,
+        cep: response?.cep,
+        cidade: cidade,
+        cidade_id: response?.cidade_id,
+        estado: response?.estado_id,
+        logradouro: response?.logradouro,
+        numero: response?.numero,
+        bairro: response?.bairro,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetUser();
   }, []);
 
   return (
@@ -74,12 +156,20 @@ const Home = ({ route, navigation }: Props) => {
               source={watermark}
               resizeMode="contain"
             />
-            <View style={{ width: '90%', paddingHorizontal: 15 }}>
+            <View
+              style={{
+                width: width * 0.8,
+                alignSelf: 'center',
+              }}
+            >
               <InputAutocomplete
                 name="search"
                 loading={isLoading}
                 placeholder="O que você procura?"
-                items={[{ id: '', title: '' }]}
+                items={productList.map((slug: any) => ({
+                  id: slug.id,
+                  title: `${slug.titulo}`,
+                }))}
                 control={control}
               />
             </View>
@@ -95,27 +185,28 @@ const Home = ({ route, navigation }: Props) => {
               buttonHeight={60}
               buttonWidth={210}
               buttonColor="Secondary"
+              onPress={() => navigation.navigate('TechnicalAssistance')}
             />
             <Spacer amount={1} />
             <HeilightItems />
             <Image
               source={bottomImage}
               resizeMode="contain"
-              style={{ width: '100%', height: 110 }}
+              style={{ width: width * 0.8, height: width * 0.35 }}
             />
             <Spacer amount={3} />
           </View>
         }
       />
 
-      <ModalScreen
+      {/* <ModalScreen
         onNavigateToLogin={() => {
           setIsClosed(true);
           dispatch(visibility({ isVisible: false, condition: true }));
           navigation.navigate('LoginRoutes');
         }}
         onClose
-      />
+      /> */}
     </ContainerPage>
   );
 };

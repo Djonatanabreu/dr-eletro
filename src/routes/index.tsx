@@ -17,11 +17,11 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="PrivateStack" component={PrivateRoutes} />
-        {/* {signed ? (
-        ) : (
+        {!signed ? (
           <Stack.Screen name="LoginRoutes" component={LoginRoutes} />
-        )} */}
+        ) : (
+          <Stack.Screen name="PrivateRoutes" component={PrivateRoutes} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

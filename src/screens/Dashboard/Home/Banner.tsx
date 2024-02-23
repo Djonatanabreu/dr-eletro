@@ -3,7 +3,6 @@ import { ActivityIndicator, Linking, View } from 'react-native';
 import { defaultTheme } from 'styles/default';
 import { BannerStyle } from './styles';
 import { useCompanyStore } from 'store/company';
-import { useUserStore } from 'store/user';
 import { Banner } from './types';
 import api from 'services/api';
 import useAuthStore from 'store/auth';
@@ -18,7 +17,7 @@ export const Banners = () => {
   const signed = useAuthStore(state => state.signed);
 
   const company_id = useCompanyStore(state => state.company_id);
-  const cidade = useUserStore(state => state.cidade);
+  // const cidade = useUserStore(state => state.cidade);
 
   const toast = useToast();
 
@@ -49,7 +48,7 @@ export const Banners = () => {
     if (company_id) {
       handleGetBanners();
     }
-  }, [company_id, cidade]);
+  }, [company_id]);
 
   if (isLoading)
     return (

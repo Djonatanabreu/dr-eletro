@@ -16,6 +16,7 @@ type RootStackParamList = {
   Profile: undefined;
   MinhaAgenda: any;
   MinhasIdeias: any;
+  TechnicalAssistance: any;
   MeusPedidos: any;
   Produtos: any;
 };

@@ -8,9 +8,10 @@ export const noticias = require('./drawer/noticias.png');
 export const sobre = require('./drawer/about.png');
 export const about = require('./drawer/about.png');
 export const sair = require('./drawer/sair.png');
+export const settings = require('./drawer/settings.png');
+export const megaphone = require('./drawer/megaphone.png');
 
 export const bannerAuth = require('./bannerAuth.png');
-export const logoauth = require('./logoauth.png');
 export const password = require('./password.png');
 export const email = require('./email.png');
 export const photo = require('./photo.png');
@@ -20,3 +21,4 @@ export const placeholder = require('./placeholder.png');
 export const header = require('./header.png');
 export const watermark = require('./watermark.png');
 export const bottomImage = require('./bottomImage.png');
+export const whatsapp = require('./whatsapp.png');

@@ -1,47 +1,3 @@
-// import { create } from 'zustand';
-// import { createJSONStorage, persist } from 'zustand/middleware';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import api from 'services/api';
-
-// type State = {
-//   token?: string;
-//   signed: boolean;
-// };
-
-// type Actions = {
-//   setToken: (token: string) => void;
-//   logout: () => void;
-// };
-
-// export const useAuthStore = create(
-//   persist<State & Actions>(
-//     set => ({
-//       token: undefined,
-//       signed: false,
-//       setToken: (token: string) => {
-//         api.defaults.headers.common['x-access-token'] = `Bearer ${token}`;
-//         return set(() => ({
-//           token,
-//           signed: true,
-//         }));
-//       },
-//       logout: () => {
-//         delete api.defaults.headers.common['x-access-token'];
-//         return set(() => ({
-//           token: undefined,
-//           signed: false,
-//         }));
-//       },
-//     }),
-//     {
-//       name: 'auth',
-//       storage: createJSONStorage(() => AsyncStorage),
-//     }
-//   )
-// );
-
-// __-______________---_________--_________-------_______
-
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -54,14 +10,24 @@ type State = {
 
 type Actions = {
   setToken: (token: string) => void;
+  setSigned: (value: boolean) => void;
   logout: () => void;
 };
 
-const useAuthStore = create(
+export const getToken = () => {
+  return useAuthStore.getState().token;
+};
+
+export const useAuthStore = create(
   persist<State & Actions>(
     set => ({
       token: undefined,
       signed: false,
+      setSigned: (value: boolean) => {
+        return set(() => ({
+          signed: value,
+        }));
+      },
       setToken: (token: string) => {
         api.defaults.headers.common['x-access-token'] = `Bearer ${token}`;
         return set(() => ({

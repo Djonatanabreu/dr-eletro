@@ -1,81 +1,68 @@
-import { NewButton } from 'components/Button/NewButton/NewButton';
-import { Error } from 'components/Inputs/Input/styles';
-import { Colors } from 'components/Theme';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import Button from 'components/Button';
+import Input from 'components/Inputs/Input';
+import InputSelect from 'components/Inputs/InputSelect';
+
+import { Spacer } from 'components/Spacer/Spacer';
+import { Text } from 'components/Text/Text';
+import { Column, ContentScroll, Title } from 'components/commons';
+import { ResponseError } from 'interfaces/utils.interface';
 import useToast from 'libs/useToast';
 import React, { useState, useEffect } from 'react';
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
-import RenderHTML from 'react-native-render-html';
+import { useForm } from 'react-hook-form';
+import { View, Dimensions, RefreshControl } from 'react-native';
 import BackHeader from 'screens/_headers/Back';
 import api from 'services/api';
+import useAuthStore from 'store/auth';
 import { useCompanyStore } from 'store/company';
 import { useUserStore } from 'store/user';
-import { defaultTheme } from 'styles/default';
-
-interface ICardUnit {
-  id: string;
-  titulo: string;
-  descricao: string;
-  clientes_app_id: string;
-}
 
 export default function TechnicalAssistance() {
-  const [ideaList, setIdeaList] = useState<ICardUnit[]>([]);
-  const [newCardidea, setNewCardIdea] = useState<boolean>(false);
-  const [newCardData, setNewCardData] = useState<ICardUnit | null>(null);
-  const [errors, setErrors] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const { width } = Dimensions.get('window');
   const { company_id } = useCompanyStore(state => state);
   const { user } = useUserStore(state => state);
+  const setSigned = useAuthStore(state => state.setSigned);
+  const [serviceType, setServiceType] = useState([]);
+  const { navigate } = useNavigation();
 
   const toast = useToast();
 
-  const getIdeaData = async () => {
+  const {
+    control,
+    handleSubmit,
+    setFocus,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm<any>({
+    defaultValues: {
+      nome: user?.nome,
+      whatsapp: '',
+      email: user?.email,
+      tipo_servico_id: '',
+      produtos: '',
+      descricao: '',
+    },
+  });
+
+  const handleSubmitUpdate = async (formData: any) => {
     try {
-      const { data: response } = await api.get('/minhas_ideias.php', {
-        params: { usuario_id: company_id },
-      });
+      setLoading(true);
 
-      const filterIdeasListByClientId = () => {
-        return response.data.filter((idea: ICardUnit) => {
-          return idea.clientes_app_id === user?.id;
-        });
-      };
+      let form_data: any = new FormData();
 
-      setIdeaList(filterIdeasListByClientId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      form_data.append('usuario_id', company_id);
+      form_data.append('clientes_app_id', user?.id);
+      for (let key in formData) {
+        form_data.append(key, formData[key]);
+        console.log(key);
+      }
 
-  const handleNewIdea = () => {
-    setNewCardIdea(!newCardidea);
-  };
-
-  const handleSubmitNewIdea = async () => {
-    const form_data = new FormData();
-
-    if (!newCardData?.titulo || !newCardData?.descricao) {
-      setErrors(true);
-
-      return;
-    }
-    if (newCardData?.titulo && newCardData?.descricao) {
-      form_data.append('usuario_id', String(company_id));
-      form_data.append('titulo', newCardData.titulo);
-      form_data.append('descricao', newCardData.descricao);
-      form_data.append('clientes_app_id', String(user?.id!));
-    }
-
-    try {
       const { data: response } = await api.post(
-        '/cadastrarIdeia.php',
+        '/cadastro_assistencia_tecnica.php',
         form_data,
         {
           headers: {
@@ -84,202 +71,176 @@ export default function TechnicalAssistance() {
         }
       );
 
-      handleNewIdea();
+      toast.successToast('Solicitação enviada com sucesso !');
 
-      await getIdeaData();
-      if (response.status === 200) {
-        const newIdea = {
-          titulo: newCardData.titulo,
-          descricao: newCardData.descricao,
-          id: Math.random().toString(),
-          clientes_app_id: user?.id!,
-        };
-        setIdeaList([newIdea, ...ideaList]);
-        setNewCardIdea(!newCardidea);
-      }
-      setNewCardData(null);
-      toast.successToast('Ideia criada com sucesso!');
+      reset();
+
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      const typedError = error as ResponseError;
+      if (axios.isAxiosError(error)) {
+        toast.errorToast(typedError?.response?.data?.message);
+      } else {
+        toast.errorToast('Erro ao efetuar o solicitação');
+      }
     }
   };
 
+  const handleFormChange = async userFormData => {
+    try {
+      const { data: response } = await api.get('lista_servicos.php', {
+        params: { usuario_id: company_id },
+      });
+
+      setServiceType(response);
+      setValue('whatsapp', userFormData.whatsapp);
+      setValue('produtos', userFormData.produto);
+      setValue('descricao', userFormData.descricao);
+    } catch (error) {
+      console.error('Erro ao obter dados do tipo de serviço:', error);
+    }
+  };
+
+  const formInputsValue = getValues();
+
   useEffect(() => {
-    getIdeaData();
+    handleFormChange(formInputsValue);
   }, []);
 
   return (
-    <ScrollView style={{ paddingHorizontal: width * 0.06 }}>
-      <BackHeader title="Minhas Ideias" />
-      <View
-        style={{
-          marginTop: 10,
-          marginBottom: 25,
-          gap: 20,
-          alignItems: 'center',
-        }}
-      >
+    <ContentScroll
+      style={{
+        paddingHorizontal: width * 0.06,
+        marginTop: 10,
+      }}
+      efreshControl={
+        <RefreshControl refreshing={loading} onRefresh={() => {}} />
+      }
+    >
+      <BackHeader title="Assistência Técnica" />
+      {!user ? (
+        <View
+          style={{ width: '80%', alignSelf: 'center', gap: 20, marginTop: 150 }}
+        >
+          <Title>
+            Olá, se deseja usar o app completo, finalize o seu cadastro ou entre
+            com uma conta!
+          </Title>
+          <Button
+            onPress={() => {
+              setSigned(true);
+              navigate('LoginRoutes', {
+                screen: 'login',
+              });
+            }}
+            label="Login"
+            color="primary"
+            variantType="block"
+          />
+        </View>
+      ) : (
         <View
           style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 15,
           }}
         >
-          <NewButton
-            iconButton
-            buttonHeight={40}
-            buttonText="Criar Ideia"
-            onPress={handleNewIdea}
-          />
-          {newCardidea ? (
-            <NewButton
-              iconButton
-              buttonHeight={40}
-              buttonWidth={120}
-              buttonText="Salvar"
-              onPress={handleSubmitNewIdea}
-            />
-          ) : null}
-        </View>
-        {newCardidea ? (
-          <TouchableOpacity
+          <Text color="Alternative">Formulário</Text>
+          <Spacer amount={1} />
+          <Column
             style={{
-              width: width * 0.84,
-              backgroundColor: defaultTheme.secondary,
-              height: width * 0.42,
-              borderRadius: width * 0.07,
-              padding: 8,
+              gap: 20,
             }}
           >
-            <TextInput
-              style={{
-                width: '100%',
-                alignSelf: 'center',
-                fontSize: 22,
-                color: '#fff',
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}
-              placeholder="Título"
-              placeholderTextColor={'#fff'}
-              onChangeText={value => {
-                setNewCardData(prevState => {
-                  setErrors(false);
-                  const newState = { ...prevState, titulo: value };
-                  return newState;
-                });
-                getIdeaData();
-              }}
+            <Input
+              label="Nome completo:"
+              gray
+              removeRadius
+              control={control}
+              name="nome"
+              autoCapitalize="none"
+              returnKeyType="next"
+              error={errors.nome}
+              blurOnSubmit={false}
+              onSubmitEditing={() => setFocus('whatsapp')}
             />
-
-            <View
-              style={{
-                alignSelf: 'center',
-                width: '100%',
-                height: 2,
-                backgroundColor: '#fff',
-              }}
+            <Input
+              label="Whatsapp:"
+              control={control}
+              name="whatsapp"
+              gray
+              keyboardType="phone-pad"
+              removeRadius
+              mask={'cell'}
+              autoCapitalize="none"
+              returnKeyType="next"
+              error={errors.whatsapp}
+              blurOnSubmit={false}
+              onSubmitEditing={() => setFocus('email')}
             />
-
-            <View
-              style={{
-                height: '70%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <TextInput
-                style={{
-                  alignSelf: 'center',
-                  fontSize: 20,
-                  color: '#fff',
-                  height: '100%',
-                  width: '90%',
-                  textAlign: 'center',
-                }}
-                placeholderTextColor={'#fff'}
-                placeholder="Descrição"
-                onChangeText={value => {
-                  setNewCardData(prevState => {
-                    setErrors(false);
-                    const newState = { ...prevState, descricao: value };
-                    return newState;
-                  });
-                }}
-              />
-            </View>
-            {errors && (
-              <Text
-                style={{
-                  alignSelf: 'center',
-                  fontSize: 16,
-                  position: 'absolute',
-                  bottom: -20,
-                  color: Colors.Red,
-                }}
-              >
-                {'Campos Obrigatórios.'}
-              </Text>
-            )}
-          </TouchableOpacity>
-        ) : null}
-
-        <Text style={{ fontSize: 16, marginTop: 10, marginLeft: 8 }}>
-          Últimas Ideias Criadas:
-        </Text>
-        <View style={{ marginBottom: width * 0.06, gap: 20 }}>
-          {ideaList.map((item, index) => (
-            <TouchableOpacity
-              key={index * Math.random() + Date.now()}
-              style={{
-                width: width * 0.84,
-                backgroundColor: defaultTheme.secondary,
-                height: width * 0.42,
-                borderRadius: width * 0.07,
-                padding: 8,
-              }}
-            >
-              <TextInput
-                style={{
-                  width: '100%',
-                  alignSelf: 'center',
-                  fontSize: 22,
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
-                value={item.titulo}
-                editable={false}
-              />
-
-              <View
-                style={{
-                  alignSelf: 'center',
-                  width: '100%',
-                  height: 2,
-                  backgroundColor: '#fff',
-                }}
-              />
-
-              <View
-                style={{
-                  height: '70%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <RenderHTML
-                  source={{
-                    html: `<div  style="color: #fff; padding: 0, margin: 0; margin-bottom: 5px; font-size: 20px; text-align: center; align-self: center " >${item.descricao}</div>`,
-                  }}
-                  contentWidth={width * 0.5}
-                />
-              </View>
-            </TouchableOpacity>
-          ))}
+            <Input
+              label="E-mail:"
+              control={control}
+              name="email"
+              gray
+              removeRadius
+              autoCapitalize="none"
+              keyboardType="email-address"
+              returnKeyType="next"
+              error={errors.email}
+              blurOnSubmit={false}
+              onSubmitEditing={() => setFocus('tipoServico')}
+            />
+            <InputSelect
+              items={serviceType.map((service: any) => ({
+                id: service.id,
+                label: service.nome,
+                value: service.id,
+              }))}
+              gray
+              removeRadius
+              control={control}
+              label="Tipo de serviço:"
+              error={errors.tipoServico}
+              name="tipo_servico_id"
+            />
+            <Input
+              label="Produto:"
+              control={control}
+              name="produtos"
+              gray
+              removeRadius
+              autoCapitalize="none"
+              returnKeyType="next"
+              error={errors.produto}
+              blurOnSubmit={false}
+              onSubmitEditing={() => setFocus('cep')}
+              items={serviceType}
+            />
+            <Input
+              label="Descrição:"
+              control={control}
+              name="descricao"
+              gray
+              multiline
+              removeRadius
+              returnKeyType="done"
+              error={errors.descricao}
+            />
+            <Button
+              onPress={handleSubmit(handleSubmitUpdate)}
+              label="Salvar"
+              loading={loading}
+              fullWidth
+              color="secondaryDark"
+              variantType="block"
+            />
+            <Spacer amount={3} />
+          </Column>
         </View>
-      </View>
-    </ScrollView>
+      )}
+    </ContentScroll>
   );
 }

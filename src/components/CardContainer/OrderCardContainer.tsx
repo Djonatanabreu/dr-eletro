@@ -45,7 +45,7 @@ export const OrderCardContainer = ({
                 codigo={product.codigo}
                 statusColor={
                   product.status_venda_id === '1'
-                    ? Colors.MediumGrey
+                    ? Colors.Secondary
                     : product.status_venda_id === '2'
                     ? Colors.Base
                     : Colors.Red
@@ -63,9 +63,9 @@ export const OrderCardContainer = ({
               />
               <Spacer amount={4} />
               <View style={{ alignItems: 'flex-end' }}>
-                <Text fontWeight="600" size={18} color="MediumGrey">
+                {/* TOTAL PRICE <Text fontWeight="600" size={18} color="MediumGrey">
                   Total: R$ {totalPrice.toFixed(2)}
-                </Text>
+                </Text> */}
               </View>
             </View>
           );
